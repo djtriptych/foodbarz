@@ -1,0 +1,15 @@
+{
+  "name": "recipe-lyrics",
+  "version": "0.0.0",
+  "authors": [
+    "Kenan Banks <kbanks@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
