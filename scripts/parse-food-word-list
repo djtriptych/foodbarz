@@ -5,19 +5,33 @@ import sys
 
 from bs4 import BeautifulSoup
 
+# terms present in cooking term list which should be excluded from lyric search.
 not_food = """
-
+add
 alcohol
-bill, check
+bill
+brush
+coat
+gradually
+heat
+check
 boiling point
 boil
 bone
+kitchen tissue
+light
 bottle
 brandy
 boned
 cheese
 chill
-"""
+turn
+turn off
+""".split()
+
+not_food = [term.strip() for term in not_food]
+
+print >>sys.stderr, not_food
 
 def no_parentheticals(s):
   return s.partition('(')[0] if '(' in s else s
@@ -39,14 +53,15 @@ if __name__ == '__main__':
     def add_term(term):
       term = term.strip()
       term = no_parentheticals(term)
-      terms.append(term)
+      if term not in not_food:
+        terms.append(term)
 
     for tr in soup.find_all('tr'):
       cells = tr.find_all('td')
       if 4 == len(cells):
         cell = cells[0]
-        terms = cell.string.split(',')
-        map(add_term, terms)
+        for term in  cell.string.split(','):
+        	add_term(term)
 
     for term in terms:
-    	print term
+    	print term.encode('utf-8')

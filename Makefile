@@ -11,3 +11,5 @@ etc/foods: etc/terms
 etc/terms:
 	curl http://www.linguasorb.com/spanish/food-word-list > etc/terms
 
+etc/ohhla-index:
+	scripts/ohhla-index
