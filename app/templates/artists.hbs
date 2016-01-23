@@ -1,0 +1,8 @@
+
+<h1>{{artists.length}} Arists</h1>
+
+{{#each model as |artist|}}
+  <a class='artist-link' href={{artist.href}}>{{artist.name}}</a> <br />
+{{/each}}
+
+{{outlet}}

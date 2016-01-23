@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+
+""" Parse arist pages from OHHLA. """
+
+
+import json
+import sys
+import pprint
+
+from bs4 import BeautifulSoup
+import requests
+
+TEST_PATH = 'data/artist-page.html'
+
+# Tables with these "header" rows (not really <th>'s) can be parsed.
+album_header = ('track', 'lyrics')
+remix_header = ('lyrics', 'album')
+misc_header = ('lyrics', 'artist')
+
+KNOWN_HEADERS = [
+  album_header,
+  remix_header,
+  misc_header,
+]
+
+def parse_blocks(soup):
+
+  def header(row):
+    data = row.find_all('td')
+    strings = [td.string.lower() if td.string is not None else '' for td in data]
+    return tuple(strings)
+
+  def is_block(table):
+    rows = table.find_all('tr', recursive=False)
+
+    if not len(rows) > 1:
+    	return False
+
+    headers = [(header(row) in KNOWN_HEADERS, header(row)) for row in rows]
+
+    matches = filter(None, [(head if match else None) for match, head in
+      headers])
+
+    return any(matches), matches
+
+  # Album blocks are lists of tracks
+  #
+  tables = soup.find_all('table')
+  blocks = filter(is_block, tables)
+
+  return blocks
+
+if __name__ == '__main__':
+  html = open(TEST_PATH, 'r').read()
+  soup = BeautifulSoup(html)
+  track_blocks = parse_blocks(soup)

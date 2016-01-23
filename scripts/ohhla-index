@@ -22,7 +22,7 @@ URLS = [ROOT + page for page in [
 def index_links (pre):
   def extract_link(a):
     try:
-      return a['href'], a.string
+      return ROOT + a['href'], a.string
     except:
       return None
 
@@ -51,4 +51,5 @@ def flatten1(lists):
 if __name__ == '__main__':
   links = list(gen_links(URLS))
   links = flatten1(links)
+  links = [dict(zip(('href', 'name'), (href, name))) for href, name in links]
   print json.dumps(links)
